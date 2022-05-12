@@ -59,8 +59,8 @@ ROOT_URLCONF = 'izoterm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        # 'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,10 +90,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'izm_db',
-        'USER' : 'postgres',
-        'PASSWORD' : 'www',
-        'HOST' : '127.0.0.1',
-        'PORT' : '5432',
+        'USER': 'postgres',
+        'PASSWORD': 'www',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+import uuid
 
 
 class Delivered_status(models.Model):
@@ -23,6 +24,7 @@ class Shipping_request(models.Model):
     ''' Заявка на отгрузку '''
 
     ''' Общая информация '''
+    uuid_shipping_request = models.CharField(default=str(uuid.uuid4()),  unique=True, max_length=255, verbose_name="Информация для перевозчика")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     is_deleted = models.BooleanField(default=False, verbose_name="Публикация")
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
@@ -34,9 +36,9 @@ class Shipping_request(models.Model):
     # delivered_status verbose_name="ссылка на справочник статусов заказа (новый, оформлен, отгружен, в пути, доставлен)"
 
     ''' Информация для перевозчика '''
-    Delivery_information = models.CharField(max_length=255, verbose_name="Информация для перевозчика")
-    Deliverier = models.CharField(max_length=255, verbose_name="Перевозчик")
-    Deliverier_phone = models.CharField(max_length=255, verbose_name="Телефон перевозчика")
+    delivery_information = models.CharField(max_length=255, verbose_name="Информация для перевозчика")
+    deliverier = models.CharField(max_length=255, verbose_name="Перевозчик")
+    deliverier_phone = models.CharField(max_length=255, verbose_name="Телефон перевозчика")
 
     ''' Информация о Грузоотправителе '''
     shipper = models.CharField(max_length=255, verbose_name="Грузоотправитель")
@@ -49,8 +51,8 @@ class Shipping_request(models.Model):
     consignee = models.CharField(max_length=255, verbose_name="Грузополучатель")
     consignee_address = models.CharField(max_length=255, verbose_name="Адрес Грузополучателя")
     consignee_phone = models.CharField(max_length=255, verbose_name="Телефоны Грузополучателя")
-    Consignee_contacts = models.CharField(max_length=255, verbose_name="Контактное лицо")
-    Consignee_workhours = models.CharField(max_length=255, verbose_name="Время работы склада Грузополучателя")
+    consignee_contacts = models.CharField(max_length=255, verbose_name="Контактное лицо")
+    consignee_workhours = models.CharField(max_length=255, verbose_name="Время работы склада Грузополучателя")
 
     ''' Информация о Грузе '''
     cargo_name = models.CharField(max_length=255, verbose_name="Наименование груза")
@@ -71,7 +73,7 @@ class Shipping_request(models.Model):
     # cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name="Категории")
 
     def __str__(self):
-        return self.title
+        return self.uuid_shipping_request
 
     def get_absolute_url(self):
         return reverse('ship', kwargs={'ship_slug': self.slug})
