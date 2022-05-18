@@ -1,5 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.shortcuts import render, get_object_or_404
 
 from ship.models import *
 
@@ -10,17 +10,20 @@ menu = [{'title': 'Главная', 'url_name': 'index'},
 ]
 
 def index(request):
-    ship_request = Shipping_request.objects.all()
+    ship_requests = Shipping_request.objects.all()
+    deliv_statuses = Delivered_status.objects.all()
     context = {
-        'ship_request': ship_request,
+        'ship_requests': ship_requests,
+        'deliv_statuses': deliv_statuses,
         'menu': menu[:-1],
-        'title': 'Главная страница'
+        'title': 'Список заявок на отгрузку',
+        'delivered_status_selected': 0
     }
     return render(request, 'ship/index.html', context=context)
 
 
-def deliv_status(request):
-    return HttpResponse("Статусы заявки")
+# def deliv_status(request):
+#     return HttpResponse("Статусы заявки")
 
 
 def about(request):
@@ -51,6 +54,30 @@ def pageNotFound(request, exception):
 
 
 def show_ship_request(request, ship_slug):
-    return HttpResponse(f'Заказ на отгрузку: {ship_slug}')
-    # return render(request, 'ship/ship_detail.html', context=context)
+    ship_request = get_object_or_404(Shipping_request, slug=ship_slug)
+    context = {
+        'ship_request': ship_request,
+        'menu': menu[:-1],
+        'title': ship_request.uuid_shipping_request
+
+    }
+    return render(request, 'ship/ship_detail.html', context=context)
+
+
+def show_delivered_status(request, delivered_status_id):
+    ship_requests = Shipping_request.objects.filter(delivered_status_id=delivered_status_id)
+    deliv_statuses = Delivered_status.objects.all()
+
+    if len(ship_requests) == 0:
+        raise Http404()
+
+    context = {
+        'ship_requests': ship_requests,
+        'deliv_statuses': deliv_statuses,
+        'menu': menu[:-1],
+        'title': 'Отображение по статусам',
+        'delivered_status_selected': delivered_status_id,
+
+    }
+    return render(request, 'ship/index.html', context=context)
 
