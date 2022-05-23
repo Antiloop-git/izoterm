@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import AddShipForm
 
 from ship.models import *
 
@@ -42,11 +43,20 @@ def login(request):
 
 
 def add_ship_request(request):
+    if request.method == 'POST':
+        form = AddShipForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = AddShipForm(initial={'slug': str(uuid.uuid4())})
+
     context = {
-        'menu': menu,
-        'title': 'Добавить заявку'
+        'menu': menu[:-1],
+        'title': 'Добавить заявку на отгрузку',
+        'form': form,
     }
-    return render(request, 'ship/add_ship_request.html', context=context)
+    return render(request, 'ship/add_ship.html', context=context)
 
 
 def pageNotFound(request, exception):
@@ -58,7 +68,7 @@ def show_ship_request(request, ship_slug):
     context = {
         'ship_request': ship_request,
         'menu': menu[:-1],
-        'title': ship_request.uuid_shipping_request
+        'title': ship_request.slug
 
     }
     return render(request, 'ship/ship_detail.html', context=context)

@@ -23,15 +23,18 @@ class Delivered_status(models.Model):
 class Shipping_request(models.Model):
     ''' Заявка на отгрузку '''
 
+    # default = str(uuid.uuid4()),
+
     ''' Общая информация '''
-    uuid_shipping_request = models.CharField(default=str(uuid.uuid4()),  unique=True, max_length=255, verbose_name="Информация для перевозчика")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    # uuid_shipping_request = models.UUIDField(default=str(uuid.uuid4()),  max_length=255, verbose_name="UUID")
+    # uuid_shipping_request = models.UUIDField(default=str(uuid.uuid4()), unique=True, max_length=255, verbose_name="Информация для перевозчика")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="Заявка №")
     is_deleted = models.BooleanField(default=False, verbose_name="Удалено")
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     datetime_update = models.DateTimeField(auto_now=True, verbose_name="Время изменения")
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True, verbose_name="Фото")
 
-    delivered_status = models.ForeignKey(Delivered_status, default=5, on_delete=models.PROTECT, verbose_name="Статусы заказов")
+    delivered_status = models.ForeignKey(Delivered_status, default=1, on_delete=models.PROTECT, verbose_name="Статусы заказов")
 
 
     ''' Информация для перевозчика '''
@@ -70,7 +73,7 @@ class Shipping_request(models.Model):
 
 
     def __str__(self):
-        return self.uuid_shipping_request
+        return self.slug
 
     def get_absolute_url(self):
         return reverse('ship', kwargs={'ship_slug': self.slug})

@@ -3,10 +3,10 @@ from django.contrib import admin
 from .models import *
 
 class ShipRequestAdmim(admin.ModelAdmin):
-    list_display = ('id', 'uuid_shipping_request', 'slug', 'datetime_create', 'deliverier', 'consignee', 'cargo_quantity')
-    list_display_links = ('id', 'uuid_shipping_request')
-    search_fields = ('uuid_shipping_request', 'deliverier', 'consignee')
-    prepopulated_fields = {'slug': ('uuid_shipping_request',)}
+    list_display = ('id', 'slug', 'datetime_create', 'deliverier', 'consignee', 'cargo_quantity')
+    list_display_links = ('id', 'slug')
+    search_fields = ('slug', 'deliverier', 'consignee')
+    prepopulated_fields = {'slug': ('slug',)}
 
 
 class DeliveredStatusAdmim(admin.ModelAdmin):

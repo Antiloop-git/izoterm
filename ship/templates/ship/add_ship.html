@@ -1,0 +1,30 @@
+{% extends 'ship/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <span class="badge rounded-pill bg-warning text-dark">{{title}}</span>
+
+        <form action="{% url 'add_ship_request' %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-error">{{ form.non_field_errors }}</div>
+
+            {% for f in form %}
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1" for="{{ f.id_for_label}}">{{f.label}}</span> {{ f }}
+                </div>
+
+                <div class="form-error">{{ f.errors }}</div>
+
+            {% endfor %}
+
+            <button class="badge bg-secondary" type="submit">Добавить</button>
+
+
+        </form>
+
+    </div>
+
+{% endblock %}
+
